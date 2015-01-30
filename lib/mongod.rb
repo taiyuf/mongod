@@ -1,5 +1,9 @@
-require "mongod/version"
+require 'mongo'
+require 'mongod/version'
+require 'mongod/client'
+require 'mongod/row'
 
 module Mongod
-  # Your code goes here...
 end
+
+
