@@ -12,3 +12,8 @@
 *.o
 *.a
 mkmf.log
+/vendor/
+coverage/*
+rspec.xml
+.ruby-version
+
