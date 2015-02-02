@@ -4,7 +4,6 @@ module Mongod
   class Row
 
     def initialize(bson)
-      p "bson: #{bson.inspect}"
       self.class_eval %Q{
         attr_accessor *#{bson.keys}
       }

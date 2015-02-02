@@ -14,7 +14,7 @@ require 'mongod/pagination'
 # @m = Mongod::Client.new(collection: 'hoge',
 #                         databaes:   'foo',
 #                         host:       127.0.0.1,
-#                         port:       27027)
+#                         port:       27017)
 #
 module Mongod
 
@@ -24,13 +24,13 @@ module Mongod
     include Mongo
     include Mongod::Pagination
 
-    # autoload :Row, 'mongod_row'
-
     attr_accessor *%i{
       database
       host
       port
       collection
+      user_name
+      password
     }
 
     validate :check_connection
@@ -38,18 +38,20 @@ module Mongod
     def initialize(opts={})
 
       errors = []
-      %i{ database collection host port }.each do |f|
+      %i{ database collection }.each do |f|
         raise "*** Mongod::Client: '#{f}' is required!" unless opts.keys.include? f
       end
 
-      @_db                = nil
-      @_connection        = nil
-      @_result            = []
-      self.collection    = opts[:collection]
+      @_db               = nil
+      @_connection       = nil
+      @_result           = []
       self.database      = opts[:database]
-      self.host          = opts[:host]
-      self.port          = opts[:port]
-      self.per_page      = opts[:per_page] ? opts[:per_page] : 20
+      self.collection    = opts[:collection]
+      self.host          = opts[:host] ? opts[:host] :           '127.0.0.1'
+      self.port          = opts[:port] ? opts[:port] :           27017
+      self.user_name     = opts[:user_name] ? opts[:user_name] : nil
+      self.password      = opts[:password] ? opts[:password] :   nil
+      self.per_page      = opts[:per_page] ? opts[:per_page] :   20
       self.current_page  = 1
       self.total_entries = 0
 
@@ -86,6 +88,7 @@ module Mongod
       raise "set argumet or self.database!" if db.nil? and self.database.nil?
       self.database = db if db
       @_db = self.connect.db(self.database) if @_db.nil?
+      @_db.authenticate(self.user_name, self.password) unless self.user_name.nil? and self.password.nil?
       @_db
     end
 
@@ -98,7 +101,7 @@ module Mongod
     #
     def get_collection(collection=nil)
 
-      raise "*** Mongod::get_collection: Please set the value of collection" if collection.nil? and self.collection.nil?
+      raise '*** Mongod::get_collection: Please set the value of collection' if collection.nil? and self.collection.nil?
 
       self.collection = collection unless collection.nil?
       self.get_db.collection(self.collection)
@@ -111,6 +114,18 @@ module Mongod
     #
     def each(*args, &block)
       @_result.each(*args, &block)
+    end
+
+    def drop_database(db)
+      self.connect.drop_database(db)
+    end
+
+    def drop_collection(col)
+      self.get_db.drop_collection(col)
+    end
+
+    def to_a
+      @_result
     end
 
     ## CRUD
@@ -139,6 +154,7 @@ module Mongod
       @_result.each do |r|
         self.get_collection.remove('_id' => r._id)
       end
+      @_result.clear
       self
     end
 
@@ -202,6 +218,7 @@ module Mongod
     #   1.to_i
     # end
 
+    # alias_method :last_page, :total_pages
 
     private
 
@@ -230,9 +247,6 @@ module Mongod
       return true  if /\d+\.\d+\.\d+\.\d+/ =~ info
       false
     end
-
-    # alias_method :table,     :collection
-    alias_method :last_page, :total_pages
 
   end
 

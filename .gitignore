@@ -15,4 +15,5 @@ mkmf.log
 /vendor/
 coverage/*
 rspec.xml
+.ruby-version
 
