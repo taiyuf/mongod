@@ -42,8 +42,7 @@ end
 
 #### app/view/shared/_mongod_paginate.html.erb
 
-Sample html.erb file included. please see https://github.com/taiyuf/ruby-mongod/tree/master/app/view/shared/_mongod_paginate.html.erb .
-
+Sample html.erb file included. please see https://github.com/taiyuf/ruby-mongod/blob/master/app/views/shared/_mongod_paginate.html.erb .
 
 ```ruby
 <% unless obj.nil? %>
@@ -71,7 +70,7 @@ Sample html.erb file included. please see https://github.com/taiyuf/ruby-mongod/
 
 #### app/helpers/mongod_paginate_helper.rb
 
-Sample helper file included. please see https://github.com/taiyuf/ruby-mongod/tree/master/app/helpers/mongod_paginate_helper.rb .
+Sample helper file included. please see https://github.com/taiyuf/ruby-mongod/blob/master/app/helpers/mongod_paginate_helper.rb .
 
 and you may add some code at app/helpers/mongod_paginate_helper.rb.
 
