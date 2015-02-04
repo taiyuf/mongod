@@ -134,7 +134,11 @@ module Mongod
     #
     # https://github.com/mongodb/mongo-ruby-driver
     #
-    def create(hash={})
+    def create(hash)
+      self.get_collection.insert(hash) if self.valid?
+    end
+
+    def create!(hash)
       self.get_collection.insert(hash)
     end
 

@@ -1,0 +1,21 @@
+<% unless obj.nil? %>
+  <div class='center'>
+    <nav>
+        <%= ["<ul class='pagination'>",
+             "<li#{previous_page_class(obj)}>",
+             "<a href='#{previous_page_link(obj, url, params)}' aria-label='Previous'>",
+             "<span aria-hidden='true'>&laquo;</span>",
+             "</a>",
+             "</li>"].join().html_safe %>
+
+        <%= paginate_link(obj, url, params) %>
+
+        <%= ["<li#{next_page_class(obj)}>",
+             "<a href='#{next_page_link(obj, url, params)}' aria-label='Next'>",
+             "<span aria-hidden='true'>&raquo;</span>",
+             "</a>",
+             "</li>",
+             "</ul>"].join().html_safe %>
+    </nav>
+  </div>
+<% end %>
