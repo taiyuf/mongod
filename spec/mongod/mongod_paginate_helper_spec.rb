@@ -151,96 +151,246 @@ RSpec.describe MongodPaginateHelper do
   context '.paginate_link' do
 
     context 'less than 7' do
-      before do
-        @obj    = double('obj')
 
-        allow(@obj).to receive(:current_page)
-                        .and_return(3)
-        allow(@obj).to receive(:total_pages)
-                        .and_return(6)
+      context 'first' do
+        before do
+          @obj    = double('obj')
 
-        @uri    = 'http://localhost/test'
-        @param  = { foo: 'bar' }
-        @result = %Q{<li><a href='#{@uri}?foo=bar&page=1'>1</a></li>
+          allow(@obj).to receive(:current_page)
+                          .and_return(1)
+          allow(@obj).to receive(:total_pages)
+                          .and_return(6)
+
+          @uri    = 'http://localhost/test'
+          @param  = { foo: 'bar' }
+          @result = %Q{<li class='active'><a href='#'>1 <span class='sr-only'>(current)</span></a></li>
 <li><a href='#{@uri}?foo=bar&page=2'>2</a></li>
-<li class='active'><a href='#'>3 <span class='sr-only'>(current)</span></a></li>
+<li><a href='#{@uri}?foo=bar&page=3'>3</a></li>
 <li><a href='#{@uri}?foo=bar&page=4'>4</a></li>
 <li><a href='#{@uri}?foo=bar&page=5'>5</a></li>
 <li><a href='#{@uri}?foo=bar&page=6'>6</a></li>}
-      end
-
-      it "should be " do
-        expect(paginate_link(@obj, @uri, @param)).to eq(@result)
-      end
-    end
-
-    context 'greater than 7' do
-
-      context 'left ...' do
-        before do
-          @obj    = double('obj')
-          allow(@obj).to receive(:current_page)
-                          .and_return(7)
-          allow(@obj).to receive(:total_pages)
-                          .and_return(8)
-          @uri    = 'http://localhost/test'
-          @param  = { foo: 'bar' }
-          @result = %Q{<li><a href='#{@uri}?foo=bar&page=1'>1</a></li>
-<li class="disabled"><span aria-hidden="true">..</span></li>
-<li><a href='#{@uri}?foo=bar&page=5'>5</a></li>
-<li><a href='#{@uri}?foo=bar&page=6'>6</a></li>
-<li class='active'><a href='#'>7 <span class='sr-only'>(current)</span></a></li>
-<li><a href='#{@uri}?foo=bar&page=8'>8</a></li>}
         end
 
-        it "should be " do
+        it do
           expect(paginate_link(@obj, @uri, @param)).to eq(@result)
         end
       end
 
-      context 'both ...' do
+      context 'p1' do
         before do
           @obj    = double('obj')
-          allow(@obj).to receive(:current_page)
-                          .and_return(7)
-          allow(@obj).to receive(:total_pages)
-                          .and_return(12)
-          @uri    = 'http://localhost/test'
-          @param  = { foo: 'bar' }
-          @result = %Q{<li><a href='#{@uri}?foo=bar&page=1'>1</a></li>
-<li class="disabled"><span aria-hidden="true">..</span></li>
-<li><a href='#{@uri}?foo=bar&page=5'>5</a></li>
-<li><a href='#{@uri}?foo=bar&page=6'>6</a></li>
-<li class='active'><a href='#'>7 <span class='sr-only'>(current)</span></a></li>
-<li><a href='#{@uri}?foo=bar&page=8'>8</a></li>
-<li><a href='#{@uri}?foo=bar&page=9'>9</a></li>
-<li class="disabled"><span aria-hidden="true">..</span></li>
-<li><a href='#{@uri}?foo=bar&page=12'>12</a></li>}
-        end
 
-        it "should be " do
-          expect(paginate_link(@obj, @uri, @param)).to eq(@result)
-        end
-      end
-
-      context 'right ...' do
-        before do
-          @obj    = double('obj')
           allow(@obj).to receive(:current_page)
                           .and_return(2)
           allow(@obj).to receive(:total_pages)
-                          .and_return(12)
+                          .and_return(5)
+
           @uri    = 'http://localhost/test'
           @param  = { foo: 'bar' }
           @result = %Q{<li><a href='#{@uri}?foo=bar&page=1'>1</a></li>
 <li class='active'><a href='#'>2 <span class='sr-only'>(current)</span></a></li>
 <li><a href='#{@uri}?foo=bar&page=3'>3</a></li>
 <li><a href='#{@uri}?foo=bar&page=4'>4</a></li>
-<li class="disabled"><span aria-hidden="true">..</span></li>
-<li><a href='#{@uri}?foo=bar&page=12'>12</a></li>}
+<li><a href='#{@uri}?foo=bar&page=5'>5</a></li>}
         end
 
-        it "should be " do
+        it do
+          expect(paginate_link(@obj, @uri, @param)).to eq(@result)
+        end
+      end
+
+      context 'p2' do
+        before do
+          @obj    = double('obj')
+
+          allow(@obj).to receive(:current_page)
+                          .and_return(4)
+          allow(@obj).to receive(:total_pages)
+                          .and_return(5)
+
+          @uri    = 'http://localhost/test'
+          @param  = { foo: 'bar' }
+          @result = %Q{<li><a href='#{@uri}?foo=bar&page=1'>1</a></li>
+<li><a href='#{@uri}?foo=bar&page=2'>2</a></li>
+<li><a href='#{@uri}?foo=bar&page=3'>3</a></li>
+<li class='active'><a href='#'>4 <span class='sr-only'>(current)</span></a></li>
+<li><a href='#{@uri}?foo=bar&page=5'>5</a></li>}
+        end
+
+        it do
+          expect(paginate_link(@obj, @uri, @param)).to eq(@result)
+        end
+      end
+
+#       context 'some page' do
+#         before do
+#           @obj    = double('obj')
+
+#           allow(@obj).to receive(:current_page)
+#                           .and_return(3)
+#           allow(@obj).to receive(:total_pages)
+#                           .and_return(6)
+
+#           @uri    = 'http://localhost/test'
+#           @param  = { foo: 'bar' }
+#           @result = %Q{<li><a href='#{@uri}?foo=bar&page=1'>1</a></li>
+# <li><a href='#{@uri}?foo=bar&page=2'>2</a></li>
+# <li class='active'><a href='#'>3 <span class='sr-only'>(current)</span></a></li>
+# <li><a href='#{@uri}?foo=bar&page=4'>4</a></li>
+# <li><a href='#{@uri}?foo=bar&page=5'>5</a></li>
+# <li><a href='#{@uri}?foo=bar&page=6'>6</a></li>}
+#         end
+
+#         it do
+#           expect(paginate_link(@obj, @uri, @param)).to eq(@result)
+#         end
+#       end
+
+      context 'last page' do
+        before do
+          @obj    = double('obj')
+
+          allow(@obj).to receive(:current_page)
+                          .and_return(6)
+          allow(@obj).to receive(:total_pages)
+                          .and_return(6)
+
+          @uri    = 'http://localhost/test'
+          @param  = { foo: 'bar' }
+          @result = %Q{<li><a href='#{@uri}?foo=bar&page=1'>1</a></li>
+<li><a href='#{@uri}?foo=bar&page=2'>2</a></li>
+<li><a href='#{@uri}?foo=bar&page=3'>3</a></li>
+<li><a href='#{@uri}?foo=bar&page=4'>4</a></li>
+<li><a href='#{@uri}?foo=bar&page=5'>5</a></li>
+<li class='active'><a href='#'>6 <span class='sr-only'>(current)</span></a></li>}
+        end
+
+        it do
+          expect(paginate_link(@obj, @uri, @param)).to eq(@result)
+        end
+      end
+
+    end
+
+    context 'greater than 7' do
+
+      context 'p3' do
+        before do
+          @obj    = double('obj')
+          allow(@obj).to receive(:current_page)
+                          .and_return(2)
+          allow(@obj).to receive(:total_pages)
+                          .and_return(9)
+          @uri    = 'http://localhost/test'
+          @param  = { foo: 'bar' }
+          @result = %Q{<li><a href='#{@uri}?foo=bar&page=1'>1</a></li>
+<li class='active'><a href='#'>2 <span class='sr-only'>(current)</span></a></li>
+<li><a href='#{@uri}?foo=bar&page=3'>3</a></li>
+<li><a href='#{@uri}?foo=bar&page=4'>4</a></li>
+<li><a href='#{@uri}?foo=bar&page=5'>5</a></li>
+<li><a href='#{@uri}?foo=bar&page=6'>6</a></li>
+<li class="disabled"><span aria-hidden="true">..</span></li>
+<li><a href='#{@uri}?foo=bar&page=9'>9</a></li>}
+        end
+
+        it do
+          expect(paginate_link(@obj, @uri, @param)).to eq(@result)
+        end
+      end
+
+      context 'p4' do
+        before do
+          @obj    = double('obj')
+          allow(@obj).to receive(:current_page)
+                          .and_return(3)
+          allow(@obj).to receive(:total_pages)
+                          .and_return(9)
+          @uri    = 'http://localhost/test'
+          @param  = { foo: 'bar' }
+          @result = %Q{<li><a href='#{@uri}?foo=bar&page=1'>1</a></li>
+<li><a href='#{@uri}?foo=bar&page=2'>2</a></li>
+<li class='active'><a href='#'>3 <span class='sr-only'>(current)</span></a></li>
+<li><a href='#{@uri}?foo=bar&page=4'>4</a></li>
+<li><a href='#{@uri}?foo=bar&page=5'>5</a></li>
+<li><a href='#{@uri}?foo=bar&page=6'>6</a></li>
+<li class="disabled"><span aria-hidden="true">..</span></li>
+<li><a href='#{@uri}?foo=bar&page=9'>9</a></li>}
+        end
+
+        it do
+          expect(paginate_link(@obj, @uri, @param)).to eq(@result)
+        end
+      end
+
+      context 'p5' do
+        before do
+          @obj    = double('obj')
+          allow(@obj).to receive(:current_page)
+                          .and_return(8)
+          allow(@obj).to receive(:total_pages)
+                          .and_return(9)
+          @uri    = 'http://localhost/test'
+          @param  = { foo: 'bar' }
+          @result = %Q{<li><a href='#{@uri}?foo=bar&page=1'>1</a></li>
+<li class="disabled"><span aria-hidden="true">..</span></li>
+<li><a href='#{@uri}?foo=bar&page=4'>4</a></li>
+<li><a href='#{@uri}?foo=bar&page=5'>5</a></li>
+<li><a href='#{@uri}?foo=bar&page=6'>6</a></li>
+<li><a href='#{@uri}?foo=bar&page=7'>7</a></li>
+<li class='active'><a href='#'>8 <span class='sr-only'>(current)</span></a></li>
+<li><a href='#{@uri}?foo=bar&page=9'>9</a></li>}
+        end
+
+        it do
+          expect(paginate_link(@obj, @uri, @param)).to eq(@result)
+        end
+      end
+
+      context 'p6' do
+        before do
+          @obj    = double('obj')
+          allow(@obj).to receive(:current_page)
+                          .and_return(7)
+          allow(@obj).to receive(:total_pages)
+                          .and_return(9)
+          @uri    = 'http://localhost/test'
+          @param  = { foo: 'bar' }
+          @result = %Q{<li><a href='#{@uri}?foo=bar&page=1'>1</a></li>
+<li class="disabled"><span aria-hidden="true">..</span></li>
+<li><a href='#{@uri}?foo=bar&page=4'>4</a></li>
+<li><a href='#{@uri}?foo=bar&page=5'>5</a></li>
+<li><a href='#{@uri}?foo=bar&page=6'>6</a></li>
+<li class='active'><a href='#'>7 <span class='sr-only'>(current)</span></a></li>
+<li><a href='#{@uri}?foo=bar&page=8'>8</a></li>
+<li><a href='#{@uri}?foo=bar&page=9'>9</a></li>}
+        end
+
+        it do
+          expect(paginate_link(@obj, @uri, @param)).to eq(@result)
+        end
+      end
+
+      context 'p7' do
+        before do
+          @obj    = double('obj')
+          allow(@obj).to receive(:current_page)
+                          .and_return(5)
+          allow(@obj).to receive(:total_pages)
+                          .and_return(9)
+          @uri    = 'http://localhost/test'
+          @param  = { foo: 'bar' }
+          @result = %Q{<li><a href='#{@uri}?foo=bar&page=1'>1</a></li>
+<li class="disabled"><span aria-hidden="true">..</span></li>
+<li><a href='#{@uri}?foo=bar&page=3'>3</a></li>
+<li><a href='#{@uri}?foo=bar&page=4'>4</a></li>
+<li class='active'><a href='#'>5 <span class='sr-only'>(current)</span></a></li>
+<li><a href='#{@uri}?foo=bar&page=6'>6</a></li>
+<li><a href='#{@uri}?foo=bar&page=7'>7</a></li>
+<li class="disabled"><span aria-hidden="true">..</span></li>
+<li><a href='#{@uri}?foo=bar&page=9'>9</a></li>}
+        end
+
+        it do
           expect(paginate_link(@obj, @uri, @param)).to eq(@result)
         end
       end

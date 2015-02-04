@@ -26,7 +26,7 @@ module Mongod
     def paginate(hash={})
 
       self.page          = hash[:page]     unless hash[:page].nil?
-      self.per_page      = hash[:per_page] unless hash[:per_page].nil?
+      self.per_page      = hash[:per_page] ? hash[:per_page]: Mongod::PAGINATE_PER_PAGE
       self.total_entries = @_result.count.to_i
 
       @_result = @_result
