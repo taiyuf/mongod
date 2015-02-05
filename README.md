@@ -8,16 +8,8 @@ Pagination with Bootstrap enabled.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'mongod'
+gem 'mongod',    '~> 0.0.4', github: 'taiyuf/ruby-mongod'
 ```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install mongod
 
 ## Usage
 
