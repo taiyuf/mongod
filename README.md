@@ -22,7 +22,8 @@ Or install it yourself as:
 ## Usage
 
 Please use this module as base class for your model.
-Mongo DB has no schema, you know, you must implement validation and 
+Mongo DB has no schema, so you must implement validation and some method.
+
 
 ### Install
 
@@ -30,7 +31,15 @@ Mongo DB has no schema, you know, you must implement validation and
 require 'monogod'
 
 class YourClass < Mongod::Client
-
+  .
+  .
+  .
+  def save
+    self.create! if self.valid?
+      .
+      .
+      .
+  end
   .
   .
   .
@@ -97,11 +106,12 @@ locals: { obj:    @sample,
 
 ```
 
+## Todo
 
 
 ## Contributing
 
-1. Fork it ( https://github.com/taiyuf/mongod/fork )
+1. Fork it ( https://github.com/taiyuf/ruby-mongod/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
