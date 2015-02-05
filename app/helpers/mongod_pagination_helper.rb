@@ -100,10 +100,12 @@ module MongodPaginationHelper
     array.push(divider) if right_divider
 
     # last element
-    if current == total
+    unless total == 1
+      if current == total
         array.push("<li class='active'><a href='#'>#{total} <span class='sr-only'>(current)</span></a></li>")
-    else
-      array.push(make_li_selector_from_params(url, params, obj.total_pages))
+      else
+        array.push(make_li_selector_from_params(url, params, obj.total_pages))
+      end
     end
 
     array.join("\n").html_safe
