@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'active_support'
-require File.expand_path('../../../app/helpers/mongod_paginate_helper', __FILE__)
-include MongodPaginateHelper
+require File.expand_path('../../../app/helpers/mongod_pagination_helper', __FILE__)
+include MongodPaginationHelper
 
 class String
   def html_safe
@@ -9,7 +9,7 @@ class String
   end
 end
 
-RSpec.describe MongodPaginateHelper do
+RSpec.describe MongodPaginationHelper do
 
   context '.next_page_class 1' do
     before do

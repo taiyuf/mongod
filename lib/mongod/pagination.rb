@@ -16,7 +16,7 @@ module Mongod
     def page=(p=nil)
 
       if p.nil?
-        self.total_pages
+        self.total_pages.to_i
       else
         # ???
         self.current_page = p.to_i
@@ -25,16 +25,15 @@ module Mongod
 
     def paginate(hash={})
 
-      self.page          = hash[:page]     unless hash[:page].nil?
-      self.per_page      = hash[:per_page] ? hash[:per_page]: Mongod::PAGINATE_PER_PAGE
+      self.page          = hash[:page]
+      self.per_page      = hash[:per_page] ? hash[:per_page] : Mongod::PAGINATION_PER_PAGE.to_i
       self.total_entries = @_result.count.to_i
+      @_result           = @_result
+                           .drop(self.per_page.to_i * (self.current_page.to_i - 1))
+                           .first(self.per_page.to_i)
 
-      @_result = @_result
-                 .drop(self.per_page * (self.current_page - 1))
-                 .first(self.per_page)
-
-      div = self.total_entries.divmod(self.per_page)
-      self.total_pages = div[1] == 0 ? div[0].to_i : div[0].to_i + 1
+      div                = self.total_entries.divmod(self.per_page.to_i)
+      self.total_pages   = div[1] == 0 ? div[0].to_i : div[0].to_i + 1
 
       self
     end
@@ -44,19 +43,11 @@ module Mongod
     end
 
     def next_page
-      if self.current_page.to_i == self.total_pages.to_i
-        nil
-      else
-        self.current_page.to_i + 1
-      end
+      self.current_page.to_i == self.total_pages.to_i ? nil : self.current_page.to_i + 1
     end
 
     def previous_page
-      if self.current_page.to_i == 1
-        nil
-      else
-        self.current_page.to_i - 1
-      end
+      self.current_page.to_i == 1 ? nil : self.current_page.to_i - 1
     end
 
     def first_page
